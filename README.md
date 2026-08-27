@@ -42,7 +42,7 @@ The network address `192.168.40.0/24` is divided into two `/25` subnets:
 ## 6. Network Configuration
 * **Switch-to-End Device Connections:** Copper Straight-Through cables connect PCs and printers to their respective departmental switches.
 * **Router-to-Switch Connections:** Copper Straight-Through cables connect the departmental switches to the central Router0 interfaces.
-* **Inter-VLAN / Routing:** Configured gateway IPs on the router interfaces so traffic can pass seamlessly between the Accounts and Delivery subnets.
+* **Inter-subnet routing:** Configured gateway IPs on the router interfaces so traffic can pass between the Accounts and Delivery subnets.
 
 ## 7. Step-by-Step Network Configuration
 
@@ -66,9 +66,11 @@ Router(config-if)# no shutdown
 Router(config-if)# exit
 
 ! Save configuration
+Router(config)# end
 Router# write memory
+```
 
-#### Step 2:Configure End Devices (Static IP Setup)
+#### Step 2: Configure End Devices (Static IP Setup)
 For a beginner starting out in Cisco Packet Tracer, follow these steps to assign static IP addresses to each end device:
 
 Click on the target end device (e.g., PC0).
@@ -105,7 +107,14 @@ Printer1: IP Address -> 192.168.40.132
 
 
 ## 8. How the Network Works
-The network isolates the Accounts and Delivery departments into separate subnets using a `/25` mask. When a PC in the Delivery department communicates with a PC in the Accounts department, the packet travels through the local switch, hits Router0's gateway interface, and is routed to the destination subnet.
+The `/25` subnet mask divides the original `192.168.40.0/24` network into two separate IP networks. Each department is connected to a different physical interface on Router0, so the router provides the default gateway for that department:
+
+* Accounts devices use `192.168.40.1` on `GigabitEthernet0/0` as their default gateway.
+* Delivery devices use `192.168.40.129` on `GigabitEthernet0/1` as their default gateway.
+
+When a device communicates with another device in the same department subnet, it sends the traffic through its local switch directly to the destination device. When a Delivery device communicates with an Accounts device, it recognizes that `192.168.40.0/25` is a different network. It sends the frame to its default gateway, `192.168.40.129`, through the Delivery switch. Router0 receives the packet on `GigabitEthernet0/1`, consults its connected routes, and forwards it out `GigabitEthernet0/0` toward the Accounts subnet. The Accounts switch then delivers the frame to the destination device.
+
+The return traffic follows the reverse path through Router0. Because both subnets are directly connected to the router and each end device has the correct default gateway, no additional static routes are required for communication between these two networks.
 
 
 ## 9. Testing and Verification
