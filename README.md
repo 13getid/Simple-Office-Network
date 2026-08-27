@@ -44,19 +44,78 @@ The network address `192.168.40.0/24` is divided into two `/25` subnets:
 * **Router-to-Switch Connections:** Copper Straight-Through cables connect the departmental switches to the central Router0 interfaces.
 * **Inter-VLAN / Routing:** Configured gateway IPs on the router interfaces so traffic can pass seamlessly between the Accounts and Delivery subnets.
 
-## 7. How the Network Works
+## 7. Step-by-Step Network Configuration
+
+### Step 1: Router Interface Configuration
+Access the command line interface (CLI) of **Router0** and configure the gateway IP addresses for both subnets:
+
+```text
+Router> enable
+Router# configure terminal
+
+! Configure Accounts Department Interface
+Router(config)# interface GigabitEthernet0/0
+Router(config-if)# ip address 192.168.40.1 255.255.255.128
+Router(config-if)# no shutdown
+Router(config-if)# exit
+
+! Configure Delivery Department Interface
+Router(config)# interface GigabitEthernet0/1
+Router(config-if)# ip address 192.168.40.129 255.255.255.128
+Router(config-if)# no shutdown
+Router(config-if)# exit
+
+! Save configuration
+Router# write memory
+
+### Step 2:Configure End Devices (Static IP Setup)
+For a beginner starting out in Cisco Packet Tracer, follow these steps to assign static IP addresses to each end device:
+
+Click on the target end device (e.g., PC0).
+
+Go to the Desktop tab at the top.
+
+Open IP Configuration.
+
+Select Static and fill in the corresponding IPv4 Address, Subnet Mask, and Default Gateway based on your department's subnet:
+
+Accounts Department Devices (192.168.40.0/25 subnet)
+
+Subnet Mask: 255.255.255.128
+
+Default Gateway: 192.168.40.1
+
+PC0: IP Address -> 192.168.40.2
+
+PC1: IP Address -> 192.168.40.3
+
+Printer0: IP Address -> 192.168.40.4
+
+Delivery Department Devices (192.168.40.128/25 subnet)
+
+Subnet Mask: 255.255.255.128
+
+Default Gateway: 192.168.40.129
+
+PC2: IP Address -> 192.168.40.130
+
+PC3: IP Address -> 192.168.40.131
+
+Printer1: IP Address -> 192.168.40.132
+
+## 8. How the Network Works
 The network isolates the Accounts and Delivery departments into separate subnets using a `/25` mask. When a PC in the Delivery department communicates with a PC in the Accounts department, the packet travels through the local switch, hits Router0's gateway interface, and is routed to the destination subnet.
 
-## 8. Testing and Verification
+## 9. Testing and Verification
 * **Ping Tests:** Verified successfully by running `ping` commands from Delivery department PCs to Accounts department PCs.
 * **Simulation Mode:** Inspected ICMP packets traveling across the router to confirm proper encapsulation and gateway forwarding.
 
-## 9. How to Open the Project
+## 10. How to Open the Project
 1. Download and install [Cisco Packet Tracer](https://www.netacad.com/courses/packet-tracer).
 2. Clone or download this repository.
 3. Open `Simple-Office-Network-design.pkt` in Cisco Packet Tracer.
 
-## 10. Future Improvements
+## 11. Future Improvements
 * Implement VLAN tagging (802.1Q) on a single switch or trunk link.
 * Configure DHCP services on the router to dynamically assign IP addresses.
 * Add access control lists (ACLs) to restrict inter-department traffic for security.
