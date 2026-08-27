@@ -46,7 +46,7 @@ The network address `192.168.40.0/24` is divided into two `/25` subnets:
 
 ## 7. Step-by-Step Network Configuration
 
-### Step 1: Router Interface Configuration
+#### Step 1: Router Interface Configuration
 Access the command line interface (CLI) of **Router0** and configure the gateway IP addresses for both subnets:
 
 ```text
@@ -68,7 +68,7 @@ Router(config-if)# exit
 ! Save configuration
 Router# write memory
 
-### Step 2:Configure End Devices (Static IP Setup)
+#### Step 2:Configure End Devices (Static IP Setup)
 For a beginner starting out in Cisco Packet Tracer, follow these steps to assign static IP addresses to each end device:
 
 Click on the target end device (e.g., PC0).
@@ -103,17 +103,21 @@ PC3: IP Address -> 192.168.40.131
 
 Printer1: IP Address -> 192.168.40.132
 
+
 ## 8. How the Network Works
 The network isolates the Accounts and Delivery departments into separate subnets using a `/25` mask. When a PC in the Delivery department communicates with a PC in the Accounts department, the packet travels through the local switch, hits Router0's gateway interface, and is routed to the destination subnet.
+
 
 ## 9. Testing and Verification
 * **Ping Tests:** Verified successfully by running `ping` commands from Delivery department PCs to Accounts department PCs.
 * **Simulation Mode:** Inspected ICMP packets traveling across the router to confirm proper encapsulation and gateway forwarding.
 
+
 ## 10. How to Open the Project
 1. Download and install [Cisco Packet Tracer](https://www.netacad.com/courses/packet-tracer).
 2. Clone or download this repository.
 3. Open `Simple-Office-Network-design.pkt` in Cisco Packet Tracer.
+
 
 ## 11. Future Improvements
 * Implement VLAN tagging (802.1Q) on a single switch or trunk link.
